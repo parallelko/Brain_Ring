@@ -1,6 +1,6 @@
 byte mac[] = {0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED};
 byte my_IP[] = {192,168,1,27};
-IPAddress ip(my_IP);//Свой IP
+IPAddress ip(my_IP);//РЎРІРѕР№ IP
 #define SERVER_PORT 80
 EthernetServer server(SERVER_PORT);
 #define REQ_BUF_SIZE 128
@@ -163,9 +163,10 @@ void serverWorks2(EthernetClient sclient) {
   } // if (client)  
 } // serverWorks2( )
 
-void serverWorks() { //Обработка сообщений Ethernet
+void serverWorks() { //РћР±СЂР°Р±РѕС‚РєР° СЃРѕРѕР±С‰РµРЅРёР№ Ethernet
   for (int sock = 0; sock < MAX_SOCK_NUM - 1; sock++) {
     EthernetClient sclient = server.available_(sock);
     serverWorks2(sclient);
   }
 }
+

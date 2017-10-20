@@ -1,14 +1,10 @@
-#include <string.h> //Библиотека для работ со строками
-#include <stdio.h> //Библиотека для преобразования
-#include <MsTimer2.h> //Библиотека для работы с прерыванием по таймеру
-#include <SPI.h>   //подключаем библиотеку для работы с SPI
-#include <Ethernet.h>  //Библиотека для работы в сети
+#include <string.h> 
+#include <stdio.h> 
+#include <MsTimer2.h> 
+#include <SPI.h> 
+#include <Ethernet.h>
 
 //LED defines
-#define PLAYER_1_LED 2
-#define PLAYER_2_LED 3
-#define PLAYER_3_LED 4
-#define PLAYER_4_LED 5
 #define MAIN_LED 33
 
 //Button deffines
@@ -28,10 +24,10 @@
 #define UNPRESS 0
 #define PRESS 1
 #define FAILED 2
-#define ANSWER_TIME_OUT 20000 //Время на ответ
-#define BTN_PROCCESS_FREQ 2000
+#define ANSWER_TIME_OUT 20000
+#define BTN_PROCCESS_FREQ 20
 #define MAX_PLAYERS 3
-#define BIG 600000
+#define BIG 60000000
 
 byte BTNPins[MAX_PLAYERS] = {PLAYER_1_BTN,PLAYER_2_BTN,PLAYER_3_BTN};//,PLAYER_4_BTN,PLAYER_5_BTN};
 uint8_t main_state = PREPARE;
@@ -41,13 +37,13 @@ uint32_t startMillis;
 uint8_t buttonsStates[MAX_PLAYERS];
 uint8_t pl_num;
 
-void BTNcheck() { //Проверка нажатий на кнопку после заданного вопроса
+void BTNcheck() { 
   byte i;
   switch (main_state){
     case ANSWER :
     case WAIT_FOR_ANSWER: {
       for (i = 0; i < MAX_PLAYERS; i++) {
-        if (buttonsStates[i] != FAILED && buttonsStates[i] != PRESS ) { //обрабатываем только тех кто не нажал
+        if (buttonsStates[i] != FAILED && buttonsStates[i] != PRESS ) {
           if ((buttons_time_stamps[i]-startMillis)> 0) {
             PASSED_time_stamps[i] = buttons_time_stamps[i]-startMillis;
             buttonsStates[i] = PRESS;
@@ -62,11 +58,11 @@ void BTNcheck() { //Проверка нажатий на кнопку после
 uint8_t getNext(){
   uint32_t minTime = BIG;
   uint8_t j = 0;
-     for (byte k = 0; k < MAX_PLAYERS; k++){ //Проход по кнопкам всех игроков
-      if (buttonsStates[k] != FAILED && buttonsStates[k] == PRESS ) {//Обрабатываем только тех кто нажал и исключаем из обработки ошибившихся 
+     for (byte k = 0; k < MAX_PLAYERS; k++){ 
+      if (buttonsStates[k] != FAILED && buttonsStates[k] == PRESS ) {
          if (PASSED_time_stamps[k] < minTime) {
-            minTime = PASSED_time_stamps[k]; //Запоминаем минимальное время
-            j = k; //Запоминаем номер игрока
+            minTime = PASSED_time_stamps[k]; 
+            j = k; 
          }
       }
      }
@@ -126,13 +122,6 @@ void LEDWorks(){
   
 }
 
-void LED_INIT() {
- pinMode(PLAYER_1_LED, OUTPUT);
- pinMode(PLAYER_2_LED, OUTPUT);
- pinMode(PLAYER_3_LED, OUTPUT);
- pinMode(PLAYER_4_LED, OUTPUT);  
-}
-
 void BTN_INIT() {
   pinMode(PLAYER_1_BTN , INPUT);
   pinMode(PLAYER_2_BTN , INPUT);
@@ -143,7 +132,6 @@ void BTN_INIT() {
 }
 
 void setup() {
-    LED_INIT();
     BTN_INIT();
     MsTimer2::set(BTN_PROCCESS_FREQ, BTNProccess);
     MsTimer2::start();
@@ -156,3 +144,4 @@ void loop() {
   //LEDWorks();
   serverWorks();
 }
+
