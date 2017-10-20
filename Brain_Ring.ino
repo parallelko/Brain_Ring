@@ -1,22 +1,24 @@
 #include <string.h> //Библиотека для работ со строками
 #include <stdio.h> //Библиотека для преобразования
 #include <MsTimer2.h> //Библиотека для работы с прерыванием по таймеру
+#include <SPI.h>   //подключаем библиотеку для работы с SPI
+#include <Ethernet.h>  //Библиотека для работы в сети
 
 //LED defines
-#define PLAYER_1_LED 18
-#define PLAYER_2_LED 19
-#define PLAYER_3_LED 20
-#define PLAYER_4_LED 21
+#define PLAYER_1_LED 2
+#define PLAYER_2_LED 3
+#define PLAYER_3_LED 4
+#define PLAYER_4_LED 5
 #define MAIN_LED 33
 
 //Button deffines
-#define PLAYER_1_BTN 14
-#define PLAYER_2_BTN 15
-#define PLAYER_3_BTN 16
-#define PLAYER_4_BTN 17
-#define PLAYER_5_BTN 18
-#define SKIP_BTN 19
-#define NEXT_BTN 20
+#define PLAYER_1_BTN 9
+#define PLAYER_2_BTN 8
+#define PLAYER_3_BTN 7
+#define PLAYER_4_BTN 
+#define PLAYER_5_BTN 
+#define SKIP_BTN 6
+#define NEXT_BTN 5
 
 //my defines
 #define NORMAL_STATE 0
@@ -27,11 +29,11 @@
 #define PRESS 1
 #define FAILED 2
 #define ANSWER_TIME_OUT 20000 //Время на ответ
-#define BTN_PROCCESS_FREQ 20
-#define MAX_PLAYERS 5
+#define BTN_PROCCESS_FREQ 2000
+#define MAX_PLAYERS 3
 #define BIG 600000
 
-byte BTNPins[MAX_PLAYERS] = {PLAYER_1_BTN,PLAYER_2_BTN,PLAYER_3_BTN,PLAYER_4_BTN,PLAYER_5_BTN};
+byte BTNPins[MAX_PLAYERS] = {PLAYER_1_BTN,PLAYER_2_BTN,PLAYER_3_BTN};//,PLAYER_4_BTN,PLAYER_5_BTN};
 uint8_t main_state = PREPARE;
 uint32_t buttons_time_stamps[MAX_PLAYERS];
 uint32_t PASSED_time_stamps[MAX_PLAYERS];
@@ -135,7 +137,9 @@ void BTN_INIT() {
   pinMode(PLAYER_1_BTN , INPUT);
   pinMode(PLAYER_2_BTN , INPUT);
   pinMode(PLAYER_3_BTN , INPUT);
-  pinMode(PLAYER_4_BTN , INPUT);
+  //pinMode(PLAYER_4_BTN , INPUT);
+  pinMode(SKIP_BTN, INPUT);
+  pinMode(NEXT_BTN, INPUT);
 }
 
 void setup() {
@@ -143,10 +147,12 @@ void setup() {
     BTN_INIT();
     MsTimer2::set(BTN_PROCCESS_FREQ, BTNProccess);
     MsTimer2::start();
+    serverINIT();
 }
 
 void loop() {
   BTNcheck();
   statusProcces();
-  LEDWorks();
+  //LEDWorks();
+  serverWorks();
 }
